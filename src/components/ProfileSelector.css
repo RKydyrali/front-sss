@@ -1,0 +1,54 @@
+.profile-selector {
+  margin-bottom: 12px;
+}
+
+.profile-selector label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.profile-options {
+  display: flex;
+  gap: 8px;
+}
+
+.profile-btn {
+  flex: 1;
+  padding: 10px 8px;
+  background: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.profile-btn:hover {
+  background: #e8e8e8;
+}
+
+.profile-btn.selected {
+  background: #e8f5e9;
+  border-color: #22c55e;
+}
+
+.profile-icon {
+  font-size: 20px;
+}
+
+.profile-label {
+  font-weight: 600;
+  font-size: 12px;
+  color: #333;
+}
+
+.profile-desc {
+  font-size: 10px;
+  color: #666;
+  text-align: center;
+}

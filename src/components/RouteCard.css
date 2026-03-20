@@ -1,0 +1,74 @@
+.route-card {
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.route-card:hover {
+  background: #f0f0f0;
+}
+
+.route-card.selected {
+  background: #e8f5e9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.route-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.route-type {
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.route-score {
+  font-size: 12px;
+  color: #666;
+}
+
+.route-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #888;
+}
+
+.route-explanations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.explanation {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: white;
+  border-radius: 10px;
+  color: #555;
+  border: 1px solid #ddd;
+}
