@@ -2,53 +2,109 @@
   margin-bottom: 12px;
 }
 
-.profile-selector label {
-  display: block;
+.profile-selector-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 8px;
+}
+
+.profile-selector label {
   font-weight: 600;
   color: #333;
+}
+
+.profile-selector-caption {
+  font-size: 12px;
+  font-weight: 700;
+  color: #667eea;
 }
 
 .profile-options {
-  display: flex;
-  gap: 8px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 78%);
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
 }
 
-.profile-btn {
-  flex: 1;
-  padding: 10px 8px;
-  background: #f5f5f5;
-  border: 2px solid transparent;
-  border-radius: 8px;
+.profile-options::-webkit-scrollbar {
+  display: none;
+}
+
+.profile-option-card {
+  padding: 14px;
+  background: #f9f9f9;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #666;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  transition: all 0.2s ease;
+  scroll-snap-align: start;
+}
+
+.profile-option-card:hover {
+  background: #f3f4f6;
+  transform: translateY(-1px);
+}
+
+.profile-option-card.selected {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.12);
+}
+
+.profile-option-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 4px;
-  transition: all 0.2s;
+  gap: 12px;
 }
 
-.profile-btn:hover {
-  background: #e8e8e8;
-}
-
-.profile-btn.selected {
-  background: #e8f5e9;
-  border-color: #22c55e;
-}
-
-.profile-icon {
-  font-size: 20px;
-}
-
-.profile-label {
-  font-weight: 600;
+.profile-option-badge {
+  color: white;
+  padding: 4px 10px;
+  border-radius: 999px;
   font-size: 12px;
-  color: #333;
+  font-weight: 700;
 }
 
-.profile-desc {
-  font-size: 10px;
-  color: #666;
-  text-align: center;
+.profile-option-icon {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.profile-option-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.profile-option-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+@media (max-width: 640px) {
+  .profile-selector-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .profile-options {
+    grid-auto-columns: 88%;
+  }
 }

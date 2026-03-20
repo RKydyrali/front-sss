@@ -1,10 +1,13 @@
 .route-card {
+  min-width: 240px;
+  width: 240px;
   padding: 12px;
   background: #f9f9f9;
   border-radius: 8px;
   border-left: 4px solid #666;
   cursor: pointer;
   transition: all 0.2s;
+  scroll-snap-align: start;
 }
 
 .route-card:hover {
@@ -42,6 +45,10 @@
   margin-bottom: 8px;
 }
 
+.route-card .stat {
+  min-width: 0;
+}
+
 .stat {
   display: flex;
   flex-direction: column;
@@ -71,4 +78,11 @@
   border-radius: 10px;
   color: #555;
   border: 1px solid #ddd;
+}
+
+@media (max-width: 640px) {
+  .route-card {
+    min-width: 85%;
+    width: 85%;
+  }
 }
