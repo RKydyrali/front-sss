@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Polyline, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { routeApi } from '../api';
@@ -33,7 +33,7 @@ function LocationButton({ onClick }) {
   return (
     <button className="location-btn" onClick={onClick} title="My Location">
       <svg viewBox="0 0 24 24" width="24" height="24">
-        <path fill="currentColor" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+        <path fill="currentColor" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" />
       </svg>
     </button>
   );
@@ -51,7 +51,7 @@ function RecentRoutesSidebar({ routes, onSelect, isOpen, onClose }) {
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-header">
         <h3>Recent Routes</h3>
-        <button className="close-btn" onClick={onClose}>×</button>
+        <button className="close-btn" onClick={onClose}>X</button>
       </div>
       <div className="sidebar-content">
         {routes.length === 0 ? (
@@ -91,15 +91,14 @@ export default function MapPage() {
   const [recentRoutes, setRecentRoutes] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
-  const [status, setStatus] = useState('ready');
   const mapRef = useRef(null);
 
-  const defaultCenter = [43.2389, 76.8897]; // Almaty
+  const defaultCenter = [43.2389, 76.8897];
 
   useEffect(() => {
     if (user) {
       routeApi.getRecent()
-        .then(res => setRecentRoutes(res.data.items || []))
+        .then((res) => setRecentRoutes(res.data.items || []))
         .catch(() => {});
     }
   }, [user]);
@@ -134,27 +133,34 @@ export default function MapPage() {
     }
   };
 
-  const handleBuildRoute = async () => {
-    if (!origin || !destination) return;
+  const handleBuildRoute = async (
+    routeOrigin = origin,
+    routeDestination = destination,
+    routeProfile = profile
+  ) => {
+    if (!routeOrigin || !routeDestination) return;
+
     setLoading(true);
-    setStatus('loading');
     try {
       const departureTime = new Date().toISOString();
       const res = await routeApi.build({
-        origin,
-        destination,
-        profile,
+        origin: routeOrigin,
+        destination: routeDestination,
+        profile: routeProfile,
         departure_time: departureTime,
       });
+
       setRoutes(res.data.routes || []);
       setDataQuality(res.data.data_quality);
       setMessages(res.data.messages || []);
+
       if (res.data.routes?.length > 0) {
         setSelectedRoute(res.data.routes[0]);
       }
+
       if (user) {
         routeApi.getRecent()
-          .then(res => setRecentRoutes(res.data.items || []))
+          .then((recentRes) => setRecentRoutes(recentRes.data.items || []))
           .catch(() => {});
       }
     } catch (err) {
@@ -162,27 +168,30 @@ export default function MapPage() {
       setMessages([err.response?.data?.detail || 'Failed to build route']);
     } finally {
       setLoading(false);
-      setStatus('ready');
     }
   };
 
   const handleSelectRecentRoute = (route) => {
-    setOrigin({ lat: route.origin_lat, lon: route.origin_lon });
-    setDestination({ lat: route.destination_lat, lon: route.destination_lon });
-    setProfile(route.profile || 'default');
+    const nextOrigin = { lat: route.origin_lat, lon: route.origin_lon };
+    const nextDestination = { lat: route.destination_lat, lon: route.destination_lon };
+    const nextProfile = route.profile || 'default';
+
+    setOrigin(nextOrigin);
+    setDestination(nextDestination);
+    setProfile(nextProfile);
     setSidebarOpen(false);
-    handleBuildRoute();
+    handleBuildRoute(nextOrigin, nextDestination, nextProfile);
   };
 
   const getRouteCoordinates = () => {
     if (!selectedRoute?.coordinates) return [];
-    return selectedRoute.coordinates.map(c => [c.latitude, c.longitude]);
+    return selectedRoute.coordinates.map((coordinate) => [coordinate.latitude, coordinate.longitude]);
   };
 
   return (
     <div className="map-page">
       <div className="top-bar">
-        <h1>QolayJol</h1>
+        <h1>Jolserik</h1>
         {user && (
           <div className="user-info">
             <span>{user.full_name}</span>
@@ -203,7 +212,7 @@ export default function MapPage() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <MapClickHandler onMapClick={handleMapClick} />
-          
+
           {origin && (
             <Marker position={[origin.lat, origin.lon]} icon={markerIconA} />
           )}
@@ -223,14 +232,14 @@ export default function MapPage() {
         </MapContainer>
 
         <LocationButton onClick={handleGetLocation} />
-        
-        <button 
-          className="history-btn" 
+
+        <button
+          className="history-btn"
           onClick={() => setSidebarOpen(true)}
           title="Route History"
         >
           <svg viewBox="0 0 24 24" width="24" height="24">
-            <path fill="currentColor" d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+            <path fill="currentColor" d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
           </svg>
         </button>
 
@@ -254,10 +263,10 @@ export default function MapPage() {
           </div>
 
           <ProfileSelector value={profile} onChange={setProfile} />
-          
-          <button 
+
+          <button
             className="build-route-btn"
-            onClick={handleBuildRoute}
+            onClick={() => handleBuildRoute()}
             disabled={!origin || !destination || loading}
           >
             {loading ? 'Building Route...' : 'Build Route'}
@@ -265,37 +274,34 @@ export default function MapPage() {
 
           {messages.length > 0 && (
             <div className="messages">
-              {messages.map((msg, i) => (
-                <div key={i} className="message">{msg}</div>
+              {messages.map((msg, index) => (
+                <div key={index} className="message">{msg}</div>
               ))}
             </div>
           )}
-        </div>
 
-        {routes.length > 0 && (
-          <div className="routes-panel">
-            <h3>Route Options</h3>
-            <div className="routes-list">
-              {routes.map((route, index) => (
-                <RouteCard
-                  key={index}
-                  route={route}
-                  isSelected={selectedRoute === route}
-                  onClick={() => setSelectedRoute(route)}
-                />
-              ))}
-            </div>
-            {dataQuality && (
-              <div className="data-quality">
-                <small>
-                  Surface: {dataQuality.surface_available ? '✓' : '✗'} | 
-                  Weather: {dataQuality.weather_available ? '✓' : '✗'} | 
-                  Air: {dataQuality.air_available ? '✓' : '✗'}
-                </small>
+          {routes.length > 0 && (
+            <div className="routes-panel">
+              <div className="routes-list">
+                {routes.map((route, index) => (
+                  <RouteCard
+                    key={index}
+                    route={route}
+                    isSelected={selectedRoute === route}
+                    onClick={() => setSelectedRoute(route)}
+                  />
+                ))}
               </div>
-            )}
-          </div>
-        )}
+              {dataQuality && (
+                <div className="data-quality">
+                  <small>
+                    Surface: {dataQuality.surface_available ? 'Yes' : 'No'} | Weather: {dataQuality.weather_available ? 'Yes' : 'No'} | Air: {dataQuality.air_available ? 'Yes' : 'No'}
+                  </small>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
